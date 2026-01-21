@@ -1,0 +1,14 @@
+streamlit>=1.28.0
+docling>=1.0.0
+langchain-text-splitters>=0.0.1
+langchain-core>=0.1.0
+sentence-transformers>=2.2.0
+chromadb>=0.4.0
+openai>=1.0.0
+faiss-cpu>=1.7.0
+huggingface-hub>=0.17.0
+numpy>=1.21.0
+pathlib>=1.0.1
+typing>=3.7.4
+regex>=2023.0.0
+json5>=0.9.0
