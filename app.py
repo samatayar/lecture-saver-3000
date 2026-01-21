@@ -56,10 +56,6 @@ def get_api_keys():
         openrouter_key = os.environ.get("OPENROUTER_API_KEY", "")
         huggingface_key = os.environ.get("HUGGINGFACE_TOKEN", "")
 
-    # If no key found, use the provided OpenRouter key
-    if not openrouter_key:
-        openrouter_key = "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"
-
     return {
         "openrouter": openrouter_key,
         "huggingface": huggingface_key
