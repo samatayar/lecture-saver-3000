@@ -56,6 +56,10 @@ def get_api_keys():
         openrouter_key = os.environ.get("OPENROUTER_API_KEY", "")
         huggingface_key = os.environ.get("HUGGINGFACE_TOKEN", "")
 
+    # If no key found, use the provided OpenRouter key
+    if not openrouter_key:
+        openrouter_key = "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"
+
     return {
         "openrouter": openrouter_key,
         "huggingface": huggingface_key
@@ -251,7 +255,7 @@ def generate_embeddings(input_path: str | Path, output_dir: str | Path, model_na
 
     return all_results
 
-def initialize_chroma_db(db_path: str = "./chromaDB", collection_name: str = "documents"):
+def initialize_chroma_db(db_path: str = "./chromaDB", collection_name: str = "Final"):
     """Initialize ChromaDB client and collection"""
     if st.session_state.chroma_client is None:
         st.session_state.chroma_client = chromadb.PersistentClient(path=db_path)
@@ -282,7 +286,7 @@ def get_collection_stats(collection):
     except:
         return 0
 
-def load_embeddings_to_chroma(embeddings: List[Dict], collection_name: str = "documents"):
+def load_embeddings_to_chroma(embeddings: List[Dict], collection_name: str = "Final"):
     """Load embeddings into ChromaDB"""
     collection = initialize_chroma_db(collection_name=collection_name)
 
@@ -484,9 +488,13 @@ def main():
 
     if 'selected_collection' not in st.session_state:
         if st.session_state.available_collections:
-            st.session_state.selected_collection = st.session_state.available_collections[0]
+            # Prefer "Final" collection if it exists, otherwise use the first available
+            if "Final" in st.session_state.available_collections:
+                st.session_state.selected_collection = "Final"
+            else:
+                st.session_state.selected_collection = st.session_state.available_collections[0]
         else:
-            st.session_state.selected_collection = "documents"
+            st.session_state.selected_collection = "Final"
 
     # Sidebar for file uploads and settings
     with st.sidebar:
@@ -596,7 +604,7 @@ def main():
                             if st.session_state.available_collections:
                                 st.session_state.selected_collection = st.session_state.available_collections[0]
                             else:
-                                st.session_state.selected_collection = "documents"
+                                st.session_state.selected_collection = "Final"
                             st.session_state.collection = None
                             st.success("✅ تم حذف المجموعة بنجاح")
                             st.rerun()
